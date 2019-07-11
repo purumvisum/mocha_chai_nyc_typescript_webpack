@@ -1,0 +1,55 @@
+{
+  "name": "testing-webpack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "test",
+  "main": "index.js",
+  "scripts": {
+    "testUI": "webpack-dev-server --config webpack.test.config.js",
+    "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && nyc mocha --opts ./tests/mocha.opts",
+    "webpack": "webpack",
+    "webpack-dev-server": "webpack-dev-server --env.mode development --open",
+    "dev": "npm run webpack-dev-server",
+    "start": "npm run dev"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.js",
+      "**/*.test.ts",
+      "**/*.test.tsx"
+    ],
+    "reporter": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "check-coverage": true,
+    "excludeNodeModules": true
+  },
+  "author": "Divanovich",
+  "devDependencies": {
+    "@types/chai": "4.1.7",
+    "@types/mocha": "5.2.7",
+    "chai": "4.2.0",
+    "mocha": "6.1.4",
+    "nyc": "^14.1.1",
+    "source-map-loader": "0.2.4",
+    "ts-loader": "6.0.4",
+    "ts-node": "^8.3.0",
+    "tsconfig-paths": "^3.8.0",
+    "typescript": "3.5.2",
+    "uglifyjs-webpack-plugin": "2.1.3",
+    "webpack": "4.35.0",
+    "webpack-cli": "3.3.5",
+    "webpack-dev-server": "3.7.2",
+    "webpack-merge": "4.2.1",
+    "mocha-loader": "^2.0.1",
+    "mocha-webpack": "^2.0.0-beta.0"
+  }
+}
