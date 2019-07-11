@@ -1,20 +1,58 @@
-# Excalibur TypeScript & Webpack Example
+# mocha + chai + nyc + typescript + webpack
+sample app to start project with mocha test with test coverage	sample app to start project with mocha test with test coverage
 
-This is a bare bones excalibur example in typescript & webpack
+ `npm start` run project on http://localhost:8080/
 
-Other larger samples:
-* [Platformer](https://github.com/excaliburjs/sample-platformer)
-* [Shootem Up](https://github.com/excaliburjs/sample-shootemup)
+ `npm test` runt test cases in console with test coverage
 
-## Running locally
+ `npm testUI` runt test cases in browser (http://localhost:3006/tests/) 
 
-* Using [nodejs](https://nodejs.org/en/) and [npm](https://www.npmjs.com/)
-* Run the `npm install` to install dependencies
-* Run the `npm run dev` to run the development server to test out changes
-   * [Webpack](https://webpack.js.org/) will build the [typescript](https://www.typescriptlang.org/) into javascript
-   * [Webpack dev server](https://webpack.js.org/configuration/dev-server/) will host the script in a little server on http://localhost:8082/
+ ## Configs:
 
-## Building bundles
+ *mocha.opts*
+```javascript
+--require ts-node/register //You can run typescript directly on the node with the ts-node package
+--require tsconfig-paths/register // Helps with aliases (tsconfig path)
+--require source-map-support/register
+--full-trace
+--recursive
+--bail
+src/**/*.test.ts
+```
 
-* Run `npm run build:dev` to produce javascript bundles for debugging in the `dist/` folder
-* Run `npm run build:prod` to produce javascript bundles for production (minified) in the `dist/` folder
+ *package.json*
+```javascript
+...
+ "scripts": {
+    // run dev server with separate webpack config
+    "testUI": "webpack-dev-server --config webpack.test.config.js",
+    // run mocha in console with test coverage but with changed tsconfig (node does not understand es6 modules)
+    "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"} && nyc mocha --opts ./tests/mocha.opts", 
+    "webpack": "webpack",
+    "webpack-dev-server": "webpack-dev-server --env.mode development --open",
+    "dev": "npm run webpack-dev-server",
+    "start": "npm run dev"
+  },
+  // set up nyc configurations
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.js",
+      "**/*.test.ts",
+      "**/*.test.tsx"
+    ],
+    "reporter": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "check-coverage": true,
+    "excludeNodeModules": true
+  },
+...
+```
